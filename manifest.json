@@ -5,4 +5,4 @@
   "url": "https://promahdimosavi.github.io/schams/", 
   "iconUrl": "https://promahdimosavi.github.io/schams/icon.png", 
   "short_name": "ModyDApp", 
-  "permissions": ["ton_send", "ton_sign" و "ton_sendTransaction"], }
+  "permissions": ["ton_send", "ton_sign" , "ton_sendTransaction"], }
