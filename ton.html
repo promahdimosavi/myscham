@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>انتقال تون با Ton Connect</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk"></script>
+    <title>انتقال تون با TON Connect</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/ui"></script>
+	<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f8f9fa;
+            background-color: #f5f5f5;
+            margin-top: 50px;
         }
         button {
             padding: 10px 20px;
@@ -23,34 +25,33 @@
         button:hover {
             background-color: #0056b3;
         }
-        .container {
-            margin-top: 50px;
+        #ton-connect {
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>انتقال تون با Ton Connect</h1>
-        <button id="connectBtn">اتصال به کیف پول</button>
-        <button id="sendTransactionBtn" style="display: none;">انتقال ۵ تون</button>
-    </div>
+    <h1>اتصال و انتقال تون با TON Connect</h1>
+    <div id="ton-connect"></div>
+    <button id="sendTransactionBtn" style="display: none;">انتقال ۵ تون</button>
 
     <script>
-        const connector = new TonConnect();
+        // تنظیم TON Connect UI
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://promahdimosavi.github.io/schams/manifest.json', // آدرس manifest.json سایت شما
+            buttonRootId: 'ton-connect'
+        });
 
-        const connectBtn = document.getElementById('connectBtn');
         const sendTransactionBtn = document.getElementById('sendTransactionBtn');
 
-        // مدیریت اتصال به کیف پول
-        connectBtn.addEventListener('click', async () => {
-            try {
-                await connector.connectWallet();
-                alert('اتصال به کیف پول با موفقیت انجام شد!');
-                connectBtn.style.display = 'none';
-                sendTransactionBtn.style.display = 'inline-block';
-            } catch (error) {
-                console.error('خطا در اتصال به کیف پول:', error);
-                alert('اتصال به کیف پول انجام نشد.');
+        // وقتی کیف پول متصل می‌شود
+        tonConnectUI.onStatusChange((wallet) => {
+            if (wallet) {
+                console.log('کیف پول متصل شد:', wallet);
+                sendTransactionBtn.style.display = 'block';
+            } else {
+                console.log('کیف پول قطع شد.');
+                sendTransactionBtn.style.display = 'none';
             }
         });
 
@@ -60,15 +61,15 @@
                 const transaction = {
                     to: 'EQC0eYzgzgQKtKMFvH9zSiwX6ugWiKZWxYpqB2-3pSH7HRK6', // آدرس مقصد
                     value: '5000000000', // مقدار ۵ تون (در نانو تون)
-                    stateInit: undefined, // اگر قرارداد خاصی باشد، مقدار دهی کنید
-                    data: undefined, // اطلاعات اضافی (اختیاری)
+                    stateInit: undefined,
+                    data: undefined
                 };
 
-                await connector.sendTransaction(transaction);
+                await tonConnectUI.sendTransaction(transaction);
                 alert('تراکنش با موفقیت ارسال شد!');
             } catch (error) {
                 console.error('خطا در ارسال تراکنش:', error);
-                alert('تراکنش انجام نشد.');
+                alert('ارسال تراکنش انجام نشد.');
             }
         });
     </script>
